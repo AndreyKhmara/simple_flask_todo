@@ -7,3 +7,11 @@ class Todo(db.Model):
     text = db.Column(db.String(80), nullable=False)
     title = db.Column(db.String(80), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "text": self.text,
+            "title": self.title,
+            "created_at": self.created_at.isoformat()
+        }
