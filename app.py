@@ -49,3 +49,27 @@ def create_todo():
 
     return jsonify(new_todo.to_dict()), 201
 
+
+@app.route("/todos/<int:todo_id>", methods=["DELETE"])
+def delete_todo(todo_id):
+    print('todo_id:', todo_id)
+
+    todo = db.session.get(Todo, todo_id)
+
+    if not todo:
+        jsonify({'error': f'Not found ID {todo_id}'}), 404
+
+    try:
+        db.session.delete(todo)
+        db.session.commit()
+        return jsonify({
+            "message": "Product deleted successfully",
+            "deleted_id": todo_id
+        }), 200
+
+    except Exception as e:
+
+        db.session.rollback()
+        return jsonify({"error": "Database error occurred", "details": str(e)}), 500
+
+
