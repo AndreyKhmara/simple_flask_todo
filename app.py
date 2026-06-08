@@ -34,14 +34,13 @@ def get_todos():
 @app.route("/todos", methods=["POST"])
 def create_todo():
     data = request.get_json()
-    print(data)
 
-    if not data or "title" not in data:
+    if not data or "text" not in data:
         return jsonify({"error": "Title is required"}), 400
 
     new_todo = Todo(
-        title=data["title"],
         text=data["text"],
+        isCompleted=data["isCompleted"],
     )
 
     db.session.add(new_todo)
