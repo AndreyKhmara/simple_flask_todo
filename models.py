@@ -1,5 +1,5 @@
 from datetime import datetime
-from app import db
+from db import db
 
 
 class Todo(db.Model):
@@ -19,7 +19,6 @@ class Todo(db.Model):
             "isCompleted": self.isCompleted,
             "created_at": self.created_at.isoformat()
         }
-
 
 # Для перренаката ->
 # меняем модель,
