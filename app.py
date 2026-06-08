@@ -51,8 +51,6 @@ def create_todo():
 
 @app.route("/todos/<int:todo_id>", methods=["DELETE"])
 def delete_todo(todo_id):
-    print('todo_id:', todo_id)
-
     todo = db.session.get(Todo, todo_id)
 
     if not todo:
@@ -71,4 +69,28 @@ def delete_todo(todo_id):
         db.session.rollback()
         return jsonify({"error": "Database error occurred", "details": str(e)}), 500
 
+
+@app.route("/todos/<int:todo_id>", methods=["PATCH"])
+def toggle_todo(todo_id):
+    payload = request.get_json(silent=True)
+
+    if not payload:
+        return jsonify({"error": "Request body is required"}), 400
+
+    is_completed = payload.get("isCompleted")
+
+    try:
+        todo = db.session.get(Todo, todo_id)
+
+        if not todo:
+            return jsonify({"error": "Todo not found"})
+
+        todo.isCompleted = is_completed
+        db.session.commit()
+        return jsonify(todo.to_dict()), 200
+
+    except Exception as e:
+
+        db.session.rollback()
+        return jsonify({"error": "Database error occurred", "details": str(e)}), 500
 
